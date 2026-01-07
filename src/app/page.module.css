@@ -1,0 +1,381 @@
+.page {
+  position: relative;
+  /* max-width: 480px; */
+  margin: 0 auto;
+  height: 100%; /* 由 body/#__next 提供高度，占满视口，避免再出现外层滚动 */
+  padding: 0; /* 内边距交给内部容器 */
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue',
+    Arial, 'Microsoft YaHei', sans-serif;
+  overflow: hidden; /* 禁止本层滚动，只允许内部滚动 */
+  width: 100%;
+}
+
+/* 固定容器：包含 header 和 tabs */
+.fixedHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  width: 100%;
+  pointer-events: none; /* 容器本身不拦截事件，但子元素可以 */
+  height: 130px;
+}
+
+.mainContent {
+  margin-top: 130px; /* header (60px) + tabs (70px) */
+  padding: 0 16px 24px 16px;
+  box-sizing: border-box;
+  height: calc(100% - 130px); /* 剩余空间内滚动 */
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  position: relative; /* 改为 relative，因为父容器已经是 fixed */
+  padding: 32px 16px 0;
+  box-sizing: border-box;
+  height: 60px; /* header 固定高度 */
+  pointer-events: auto; /* 确保可以交互 */
+  width: 100%;
+  background: transparent;
+}
+
+.logoArea {
+  display: flex;
+  align-items: flex-end;
+}
+
+.logoText {
+  height: 28px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 20px;
+  color: #333333;
+  line-height: 28px;
+  text-align: left;
+  font-style: normal;
+}
+
+.logoTag {
+  width: 86px;
+  height: 18px;
+  object-fit: cover;
+}
+
+.categoryButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+}
+
+.categoryIcon {
+  width: 18px;
+  height: 18px;
+  object-fit: cover;
+}
+
+.categoryText {
+  height: 24px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 17px;
+  color: #333333;
+  line-height: 24px;
+  text-align: left;
+  font-style: normal;
+}
+
+.tabs {
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  align-items: flex-end;
+  position: relative; /* 改为 relative，因为父容器已经是 fixed */
+  padding: 23px 16px 14px;
+  box-sizing: border-box;
+  height: 70px; /* tabs 固定高度：padding-top 23px + tabActive 33px + padding-bottom 14px = 70px */
+  pointer-events: auto; /* 确保可以交互 */
+  width: 100%;
+  background: transparent;
+}
+
+.tabItem {
+  position: relative;
+  padding-bottom: 9px;
+  border: none;
+  background: transparent;
+  height: 24px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 17px;
+  color: #999999;
+  line-height: 24px;
+  text-align: left;
+  font-style: normal;
+}
+
+.tabActive {
+  height: 33px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 24px;
+  color: #333333;
+  line-height: 33px;
+  text-align: left;
+  font-style: normal;
+}
+
+.tabActive::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 9px;
+  background: linear-gradient(90deg, #F06E2B 0%, rgba(249, 167, 86, 0.1) 100%);
+  border-radius: 5px 0px 5px 0px;
+  z-index: -1;
+}
+
+.banner {
+  position: relative;
+  width: 100%;
+  height: auto;
+  color: #fff;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  margin-top: 0; /* 由 .mainContent 提供顶部间距 */
+  margin-left: 0;
+  margin-right: 0;
+  display: block;
+  clear: both; /* 清除浮动，确保布局正确 */
+  /* 使用 scroll-margin-top 确保滚动时内容不会滑到顶部 */
+  scroll-margin-top: 130px;
+}
+
+
+.bannerImage {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: block;
+  z-index: 1;
+}
+
+.bannerContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  padding: 0 16px;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.bannerTitle {
+  height: 31px;
+  font-family: REEJI-SwallowGB-Flash, REEJI-SwallowGB-Flash;
+  font-weight: 500;
+  font-size: 26px;
+  color: #FFFFFF;
+  line-height: 31px;
+  text-align: center;
+  font-style: normal;
+  margin-bottom: 8px;
+}
+
+.bannerSubTitle {
+  min-height: 17px;
+  background: linear-gradient(90deg, #E7CBA6 0%, #CB9C6D 100%);
+  font-family: REEJI-SwallowGB-Flash, REEJI-SwallowGB-Flash;
+  font-weight: 500;
+  font-size: 14px;
+  color: #000000;
+  line-height: 17px;
+  text-align: right;
+  font-style: normal;
+  padding: 2px 4px;
+  display: inline-block;
+  margin-top: 8px;
+  box-sizing: border-box;
+}
+
+.bookList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bookItem {
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.bookCoverWrapper {
+  position: relative;
+  margin-right: 12px;
+}
+
+.bookCover {
+  border-radius: 6px;
+  object-fit: cover;
+  min-width: 80px;
+}
+
+.bookBadge {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  padding: 0 6px;
+  height: 16px;
+  background: rgba(0,0,0,0.4);
+  border-radius: 0px 6px 0px 6px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 10px;
+  color: #FFFFFF;
+  line-height: 16px;
+  text-align: center;
+  font-style: normal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bookInfo {
+  flex: 1;
+  margin-top: 3px;
+  min-width: 0;
+  overflow: hidden;
+  z-index: 200;
+}
+
+.bookTitle {
+  height: 18px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 18px;
+  color: #333333;
+  line-height: 18px;
+  text-align: left;
+  font-style: normal;
+  margin-bottom: 6px;
+  word-wrap: normal;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.bookMeta {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 4px;
+  font-size: 12px;
+  color: #999;
+  margin-bottom: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  max-width: 100%;
+  min-width: 0;
+}
+
+.authorIcon {
+  width: 13px;
+  height: 13px;
+  object-fit: contain;
+  margin-right: 4px;
+}
+
+.bookAuthor {
+  height: 18px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 13px;
+  color: #999999;
+  line-height: 18px;
+  text-align: left;
+  font-style: normal;
+  
+}
+
+.bookTagsContainer {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  min-width: 0;
+  flex: 1;
+  max-width: 100%;
+}
+
+.bookTag {
+  height: 18px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 13px;
+  color: #999999;
+  line-height: 18px;
+  text-align: left;
+  font-style: normal;
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+  min-width: 0;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.tagDot {
+  margin: 0 2px;
+}
+
+.dot {
+  width: 1px;
+  height: 13px;
+  background: #D8D8D8;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.bookDesc {
+  height: 36px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 13px;
+  color: #999999;
+  line-height: 18px;
+  text-align: left;
+  font-style: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-top: 0px;
+  margin-bottom: 0;
+}
+
+@media (max-width: 480px) {
+  /* .page {
+    padding-inline: 32px 16px;
+  } */
+}
+
+

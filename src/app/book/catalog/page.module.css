@@ -1,0 +1,147 @@
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 16px 16px 0;
+  position: relative;
+  z-index: 1;
+}
+
+
+.sortButton {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sortText {
+  height: 22px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 16px;
+  color: #333333;
+  line-height: 22px;
+  text-align: center;
+  font-style: normal;
+}
+
+.sortIcon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+}
+
+.chapterList0 {
+  height: 21px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 15px;
+  color: #333333;
+  line-height: 21px;
+  text-align: left;
+  font-style: normal;
+  cursor: pointer;
+  margin-top: 13px;
+  margin-bottom: 20px;
+}
+
+.content {
+  flex: 1;
+  padding: 0 16px;
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+  min-height: 0; /* 配合 flex: 1 使用，确保可以滚动 */
+  max-height: calc(100vh - 60px); /* 限制最大高度，确保可以滚动 */
+  -webkit-overflow-scrolling: touch; /* iOS 平滑滚动 */
+}
+
+.volumeTitle {
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 16px;
+  color: #333333;
+  padding: 16px 0 8px 0;
+}
+
+.divider {
+  height: 1px;
+  background: #C7C7C7;
+  width: 100%;
+}
+
+.chapterItem {
+  padding: 16px 0;
+  cursor: pointer;
+}
+
+.chapterInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chapterInfoRead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.chapterTitleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.chapterTitle {
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 16px;
+  color: #333333;
+  line-height: 22px;
+  text-align: left;
+  font-style: normal;
+  flex: 1;
+  min-width: 0;
+}
+
+.chapterTitleRead {
+  height: 22px;
+  color: #666666;
+}
+
+.chapterMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wordCount {
+  height: 18px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 13px;
+  color: #666666;
+  line-height: 18px;
+  text-align: left;
+  font-style: normal;
+}
+
+.progress {
+  height: 18px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 13px;
+  color: #666666;
+  line-height: 18px;
+  text-align: left;
+  font-style: normal;
+  flex-shrink: 0;
+}
+

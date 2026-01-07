@@ -1,0 +1,276 @@
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 13px 20px 20px 8px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: #E9E3CC;
+  /*box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); */
+}
+
+.bookTitle {
+  flex: 1;
+  text-align: center;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 16px;
+  color: #333333;
+  line-height: 22px;
+  padding: 0 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+.catalogButton {
+  border: none;
+  background: transparent;
+  height: 22px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 16px;
+  color: #333333;
+  line-height: 22px;
+  text-align: center;
+  font-style: normal;
+  cursor: pointer;
+  padding: 0;
+}
+
+.content {
+  flex: 1;
+  padding: 10px 25px 100px 25px;
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  min-height: 0; /* 配合 flex: 1 使用，确保可以滚动 */
+  max-height: 100vh; /* 限制最大高度，确保可以滚动 */
+  margin-top: 60px; /* 为吸顶的 header 留出空间 */
+}
+
+.chapterTitle {
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 600;
+  font-size: 24px;
+  color: #333333;
+  text-align: left;
+  margin: 50px 0;
+  padding: 0;
+  line-height: 1.4;
+}
+
+.textContent {
+  line-height: 1.8;
+}
+
+.paragraph {
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 20px;
+  color: #333333;
+  text-align: left;
+  margin: 0 0 20px 0;
+  padding: 0;
+  line-height: 1.8;
+  text-indent: 2em;
+}
+
+.paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.bookmarkBar {
+  position: fixed;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 480px;
+  min-height: 56px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 10px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.bookmarkTextContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  padding-right: 10px;
+}
+
+.bookmarkText {
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 16px;
+  color: #FFFFFF;
+  line-height: 22px;
+  text-align: left;
+  font-style: normal;
+  /* margin-bottom: 4px; */
+}
+
+.bookmarkSubText {
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 12px;
+  color: #FFFFFF;
+  line-height: 20px;
+  text-align: left;
+  font-style: normal;
+  opacity: 0.9;
+}
+
+.addBookmarkButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+  height: 36px;
+  border: none;
+  background: #f06e2b;
+  border-radius: 6px;
+  cursor: pointer;
+  padding: 0 10px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 14px;
+  color: #FFFFFF;
+  line-height: 22px;
+  text-align: center;
+  font-style: normal;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.addBookmarkButton:hover {
+  background: #e05d1a;
+}
+
+.addBookmarkButton:active {
+  background: #d04c0a;
+}
+
+/* 第二种样式：气泡提示框样式（带三角形指针） */
+.bookmarkBarBubble {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  min-height: 50px;
+  height: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70%;
+  /* background: rgba(0,0,0,0.66); */
+}
+
+/* .bookmarkBarBubble::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 10px solid rgba(0, 0, 0, 0.66);
+} */
+
+.closeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.closeIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+}
+
+/* .bookmarkBarBubble .closeButton {
+  border: 1px dashed #FFFFFF;
+  border-radius: 2px;
+} */
+
+.toast {
+  position: fixed;
+  /* top: 50%; */
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #00000080;
+  color: #FFFFFF;
+  padding: 10px 10px;
+  border-radius: 8px;
+  
+  z-index: 1000;
+  animation: fadeInOut 2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  bottom: 0px;
+  width: 90%;
+}
+
+.toastText {
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 16px;
+  color: #FFFFFF;
+  line-height: 22px;
+  text-align: center;
+  font-style: normal;
+  margin-bottom: 4px;
+}
+
+.toastSubText {
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 400;
+  font-size: 12px;
+  color: #FFFFFF;
+  line-height: 20px;
+  text-align: center;
+  font-style: normal;
+  opacity: 0.9;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+  20% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  80% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.9);
+  }
+}
+

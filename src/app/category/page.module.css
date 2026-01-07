@@ -1,0 +1,140 @@
+
+.container {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 300;
+}
+
+.title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 24px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 17px;
+  color: #333333;
+  line-height: 24px;
+  text-align: center;
+  font-style: normal;
+  margin: 0;
+}
+
+.tabs {
+  position: sticky;
+  top: 60px; /* header 高度 */
+  z-index: 290;
+  padding: 12px 16px 12px;
+  margin-bottom: 0;
+}
+
+.tabsContainer {
+  display: flex;
+  gap: 20px;
+  padding: 0 64px;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding-bottom: 9px;
+}
+
+.tabItem {
+  position: relative;
+  padding-bottom: 9px;
+  border: none;
+  background: transparent;
+  height: 18px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 17px;
+  color: #333333;
+  line-height: 18px;
+  text-align: left;
+  font-style: normal;
+  cursor: pointer;
+}
+
+.tabActive {
+  position: relative;
+}
+
+.tabActive::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px;
+  width: 100%;
+  height: 2px;
+  background: #F06E2B;
+  z-index: 2;
+}
+
+.tabsLine {
+  width: 100%;
+  height: 1px;
+  background: #EBEBEB;
+  position: absolute;
+  /* bottom: -9px; */
+  left: 0;
+  z-index: 1;
+}
+
+.content {
+  padding: 12px 16px 24px;
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  overflow-y: auto;
+}
+
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 16px 0;
+}
+
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.categoryGroup{
+  margin-top: 26px;
+}
+.categoryItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 67px;
+  background: #F6F6F6;
+  border-radius: 12px;
+  padding: 8px 16px;
+  
+}
+
+.categoryName {
+  height: 22px;
+  font-family: PingFangSC, PingFang SC;
+  font-weight: 500;
+  font-size: 16px;
+  color: #333333;
+  line-height: 22px;
+  text-align: left;
+  font-style: normal;
+}
+
+.categoryImage {
+  width: 93px;
+  height: 50px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
