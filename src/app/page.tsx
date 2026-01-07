@@ -345,9 +345,10 @@ export default function HomePage() {
               className={styles.logoTag}
             />
           </div>
-          <button 
+          <a 
             className={styles.categoryButton}
-            onClick={() => router.push('/category')}
+            href="/category"
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
           >
             <Image
               src="/fl@2x.png"
@@ -357,7 +358,7 @@ export default function HomePage() {
               className={styles.categoryIcon}
             />
             <span className={styles.categoryText}>分类</span>
-          </button>
+          </a>
         </header>
 
         <section className={styles.tabs}>

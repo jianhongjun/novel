@@ -155,7 +155,7 @@ function BookDetailContent() {
       <div className={styles.container}>
         <header className={`${styles.header} ${styles.stickyHeader}`}>
           
-          <button className={common.backButtonBase} onClick={() => router.push('/')}>
+          <a className={common.backButtonBase} href="/" style={{ textDecoration: 'none', display: 'inline-block' }}>
             <Image
               src="/fh@2x.png"
               alt="返回"
@@ -165,10 +165,10 @@ function BookDetailContent() {
               priority
               unoptimized
             />
-          </button>
-          <button className={styles.catalogButton} onClick={() => router.push(`/book/catalog?id=${book.id}`)}>
+          </a>
+          <a className={styles.catalogButton} href={`/book/catalog?id=${book.id}`} style={{ textDecoration: 'none' }}>
             目录
-          </button>
+          </a>
         </header>
 
         <div className={styles.scrollArea}>

@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, Suspense, useRef, useEffect, useCallback } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { getChapterList, getChapterContent, getUserId, getBookInfo } from '../../../lib/api';
 import common from '../../styles/common.module.css';
 import styles from './page.module.css';
 
 function ReadContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const [showBookmarkBar, setShowBookmarkBar] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -189,8 +188,9 @@ function ReadContent() {
                 const latestBookmark = sortedBookmarks[0];
                 if (latestBookmark && latestBookmark.chapterId) {
                   targetCcid = latestBookmark.chapterId;
-                  // 更新URL，但不触发重新加载（使用 replace 而不是 push）
-                  router.replace(`/book/read?id=${bookId}&chapter=${targetCcid}`);
+                  // 使用 window.location.replace 实现完全隔离（整页重新加载）
+                  window.location.replace(`/book/read?id=${bookId}&chapter=${targetCcid}`);
+                  return; // 跳转后不再执行后续逻辑
                 }
               }
             }
@@ -1046,7 +1046,7 @@ function ReadContent() {
   return (
     <main className={common.pageBase2}>
       <header className={styles.header}>
-        <button className={common.backButtonBase} onClick={() => router.push(`/book?id=${bookId}`)}>
+        <a className={common.backButtonBase} href={`/book?id=${bookId}`} style={{ textDecoration: 'none', display: 'inline-block' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/fh@2x.png"
@@ -1055,15 +1055,15 @@ function ReadContent() {
             height={32}
             className={common.backIconBase}
           />
-        </button>
+        </a>
         {bookTitle && (
           <div className={styles.bookTitle}>
             {bookTitle}
           </div>
         )}
-        <button className={styles.catalogButton} onClick={() => router.push(`/book/catalog?id=${bookId}`)}>
+        <a className={styles.catalogButton} href={`/book/catalog?id=${bookId}`} style={{ textDecoration: 'none' }}>
           目录
-        </button>
+        </a>
       </header>
 
       <div 

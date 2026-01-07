@@ -356,7 +356,7 @@ function CatalogContent() {
   return (
     <main className={common.pageBase2}>
       <header className={styles.header}>
-        <button className={common.backButtonBase} onClick={() => router.push(`/book?id=${bookId}`)}>
+        <a className={common.backButtonBase} href={`/book?id=${bookId}`} style={{ textDecoration: 'none', display: 'inline-block' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/fh@2x.png"
@@ -365,7 +365,7 @@ function CatalogContent() {
             height={32}
             className={common.backIconBase}
           />
-        </button>
+        </a>
         <button className={styles.sortButton} onClick={toggleSortOrder}>
           <span className={styles.sortText}>
             {sortOrder === 'desc' ? '倒序' : '正序'} 
@@ -383,12 +383,13 @@ function CatalogContent() {
       <div className={styles.divider}></div>
       
       <div className={styles.content} ref={contentRef}>
-        <div 
+        <a 
           className={styles.chapterList0}
-          onClick={() => router.push(`/book?id=${bookId}`)}
+          href={`/book?id=${bookId}`}
+          style={{ textDecoration: 'none', display: 'block' }}
         >
           书封页
-        </div>
+        </a>
         <div className={styles.divider}></div>
         {loading ? (
           <div style={{ padding: '20px', textAlign: 'center', color: '#666' }}>
