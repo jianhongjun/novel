@@ -76,6 +76,90 @@ export default function HomePage() {
     (window as any).TencentGDT = (window as any).TencentGDT || [];
   }, []); // 只在组件挂载时执行一次
 
+  // 预先为女生频道 push 一个广告位（在切换到女生 tab 之前就进入队列）
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const gdt = (window as any).TencentGDT;
+    if (!Array.isArray(gdt)) {
+      console.log('预 push 女生频道广告失败：TencentGDT 不是数组，当前状态:', gdt);
+      return;
+    }
+
+    const femaleGuardKey = '__ad_inited_female';
+    const containerId = 'adContainer_female';
+
+    // 防止重复 push
+    if ((window as any)[femaleGuardKey]) {
+      return;
+    }
+
+    console.log('预先为女生频道 push 广告进入队列，容器:', containerId);
+    (window as any)[femaleGuardKey] = true;
+
+    gdt.push({
+      app_id: '1213013256',
+      placement_id: '8215620098413686',
+      type: 'native',
+      muid_type: '1',
+      count: 1,
+      onComplete: function (res: any) {
+        console.log('=== 女生频道广告回调 onComplete ===');
+        console.log('广告回调:', res);
+
+        let retryCount = 0;
+        const maxRetries = 50; // 最多等待5秒（50 * 100ms）
+
+        const waitForContainer = () => {
+          retryCount++;
+          const container = document.getElementById(containerId);
+
+          // 只在女生频道下渲染
+          const isOnFemaleTab = !!document.getElementById('adContainer_female');
+
+          if (!container || !isOnFemaleTab) {
+            if (retryCount >= maxRetries) {
+              console.log('等待女生频道广告容器超时或不在女生频道，放弃渲染，容器:', containerId);
+              return;
+            }
+            console.log('等待女生频道广告容器:', containerId, `(${retryCount}/${maxRetries})`);
+            setTimeout(waitForContainer, 100);
+            return;
+          }
+
+          console.log('找到女生频道广告容器:', containerId);
+
+          if (res && res.constructor === Array && res.length > 0) {
+            console.log('女生频道广告数据:', res);
+            try {
+              (window as any).TencentGDT.NATIVE.renderAd(res[0], containerId);
+              console.log('✅ 女生频道广告渲染完成，容器:', containerId);
+            } catch (e) {
+              console.error('女生频道广告渲染失败:', e);
+            }
+          } else if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
+            console.log('女生频道广告数据 (data):', res.data);
+            try {
+              (window as any).TencentGDT.NATIVE.renderAd(res.data[0], containerId);
+              console.log('✅ 女生频道广告渲染完成 (data)，容器:', containerId);
+            } catch (e) {
+              console.error('女生频道广告渲染失败 (data):', e);
+            }
+          } else {
+            console.log('女生频道无广告或请求失败', res);
+          }
+        };
+
+        waitForContainer();
+      },
+      onError: function (err: any) {
+        console.error('❌ 女生频道广告请求出错:', err);
+      }
+    });
+
+    console.log('✅ 女生频道广告预 push 已进入队列，容器:', containerId, '队列长度:', gdt.length);
+  }, []);
+
   // 关键改变：在组件挂载时就准备好push调用，而不是等数据加载完成
   // 顺序：先push进入队列，然后加载SDK
   useEffect(() => {

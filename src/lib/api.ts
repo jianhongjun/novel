@@ -5,7 +5,7 @@
 import CryptoJS from 'crypto-js';
 
 const API_KEY = 'weimi_novel_key_20251223';
-const API_BASE_URL = 'https://config.umeweb.cn';
+const API_BASE_URL = 'https://business.umeweb.cn';
 
 /**
  * 生成签名
