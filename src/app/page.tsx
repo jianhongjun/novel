@@ -26,8 +26,8 @@ export default function HomePage() {
   const [error, setError] = useState<string | null>(null);
   // 标记是否已经成功通过 push + onComplete 拉取过一次首页广告
   const hasInitialHomeAdLoadedRef = useRef(false);
-  // 缓存一个备用广告素材，用于切换到女生 tab 时直接渲染（不再调用 loadAd）
-  const cachedFemaleAdRef = useRef<any | null>(null);
+  // 缓存广告素材，用于切换 tab 时直接渲染（不再调用 loadAd）
+  const cachedAdRef = useRef<any | null>(null);
   
   const tabs = [
     { key: 'male', label: '男生爱看' },
@@ -126,69 +126,12 @@ export default function HomePage() {
         placement_id: '8215620098413686',
         type: 'native',
         muid_type: '1',
-        // 一次拉取两个广告：一个给当前 tab 用，一个备用给女生 tab
-        count: 2,
+        count: 1,
         onComplete: function(res: any) {
           // 标记已经有过一次成功的广告回调
           hasInitialHomeAdLoadedRef.current = true;
           console.log('=== 广告回调 onComplete ===');
           console.log('广告回调:', res);
-
-          // 统一整理广告数组（兼容 res 和 res.data 两种格式）
-          let creatives: any[] = [];
-          if (res && Array.isArray(res) && res.length > 0) {
-            creatives = res;
-          } else if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
-            creatives = res.data;
-          }
-
-          // 没有广告时，走原来的 loadAd 兜底逻辑
-          if (!creatives.length) {
-            console.log('无广告或请求失败', res);
-            const placement_id = '8215620098413686';
-            setTimeout(function() {
-              try {
-                // 检查是否还在首页（通过检查容器是否存在）
-                const isOnHomePage = document.getElementById('adContainer_male') || document.getElementById('adContainer_female');
-                if (!isOnHomePage) {
-                  console.log('不在首页，放弃 loadAd 调用');
-                  return;
-                }
-                
-                // 检查 window.TencentGDT 是否存在（可能已被清理）
-                if (!(window as any).TencentGDT) {
-                  console.log('window.TencentGDT 不存在（可能已被清理），放弃 loadAd 调用');
-                  return;
-                }
-                
-                // 检查 NATIVE 是否存在
-                if (!(window as any).TencentGDT.NATIVE) {
-                  console.log('window.TencentGDT.NATIVE 不存在，放弃 loadAd 调用');
-                  return;
-                }
-                
-                // 检查 loadAd 方法是否存在
-                if (typeof (window as any).TencentGDT.NATIVE.loadAd !== 'function') {
-                  console.log('loadAd 方法不存在，放弃调用');
-                  return;
-                }
-                
-                (window as any).TencentGDT.NATIVE.loadAd(placement_id);
-                console.log('✅ loadAd 调用成功');
-              } catch (e2) {
-                console.error('loadAd 失败:', e2);
-              }
-            }, 3000);
-            return;
-          }
-
-          // 当前 tab 第一次展示用第一个素材
-          const primaryCreative = creatives[0];
-          // 如果当前是男生 tab，且还有第二个素材，则缓存给女生 tab 使用
-          if (activeTab === 'male' && creatives.length > 1) {
-            cachedFemaleAdRef.current = creatives[1];
-            console.log('缓存女生频道备用广告素材');
-          }
           
           // 动态获取当前activeTab对应的容器ID（解决切换tab时容器ID不匹配的问题）
           // 通过检查DOM中哪个容器存在来确定当前应该使用哪个容器
@@ -207,7 +150,7 @@ export default function HomePage() {
           
           // 等待容器存在后再渲染（限制重试次数，避免无限等待）
           let retryCount = 0;
-          const maxRetries = 10; // 最多等待5秒（50 * 100ms）
+          const maxRetries = 10; // 最多等待1秒（10 * 100ms）
           
           const waitForContainer = () => {
             retryCount++;
@@ -235,11 +178,66 @@ export default function HomePage() {
             
             console.log('找到广告容器:', currentContainerId);
             
-            try {
-              (window as any).TencentGDT.NATIVE.renderAd(primaryCreative, currentContainerId);
-              console.log('✅ 渲染完成，容器:', currentContainerId);
-            } catch (e) {
-              console.error('渲染失败:', e);
+            if (res && res.constructor === Array && res.length > 0) {
+              console.log('广告数据:', res);
+              try {
+                const creative = res[0];
+                (window as any).TencentGDT.NATIVE.renderAd(creative, currentContainerId);
+                console.log('✅ 渲染完成，容器:', currentContainerId);
+                // 缓存广告素材，用于切换 tab 时使用
+                cachedAdRef.current = creative;
+                console.log('✅ 已缓存广告素材，用于切换 tab');
+              } catch (e) {
+                console.error('渲染失败:', e);
+              }
+            } else if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
+              console.log('广告数据 (data):', res.data);
+              try {
+                const creative = res.data[0];
+                (window as any).TencentGDT.NATIVE.renderAd(creative, currentContainerId);
+                console.log('✅ 渲染完成 (data)，容器:', currentContainerId);
+                // 缓存广告素材，用于切换 tab 时使用
+                cachedAdRef.current = creative;
+                console.log('✅ 已缓存广告素材，用于切换 tab');
+              } catch (e) {
+                console.error('渲染失败 (data):', e);
+              }
+            } else {
+              console.log('无广告或请求失败', res);
+              const placement_id = '8215620098413686';
+              setTimeout(function() {
+                try {
+                  // 检查是否还在首页（通过检查容器是否存在）
+                  const isOnHomePage = document.getElementById('adContainer_male') || document.getElementById('adContainer_female');
+                  if (!isOnHomePage) {
+                    console.log('不在首页，放弃 loadAd 调用');
+                    return;
+                  }
+                  
+                  // 检查 window.TencentGDT 是否存在（可能已被清理）
+                  if (!(window as any).TencentGDT) {
+                    console.log('window.TencentGDT 不存在（可能已被清理），放弃 loadAd 调用');
+                    return;
+                  }
+                  
+                  // 检查 NATIVE 是否存在
+                  if (!(window as any).TencentGDT.NATIVE) {
+                    console.log('window.TencentGDT.NATIVE 不存在，放弃 loadAd 调用');
+                    return;
+                  }
+                  
+                  // 检查 loadAd 方法是否存在
+                  if (typeof (window as any).TencentGDT.NATIVE.loadAd !== 'function') {
+                    console.log('loadAd 方法不存在，放弃调用');
+                    return;
+                  }
+                  
+                  (window as any).TencentGDT.NATIVE.loadAd(placement_id);
+                  console.log('✅ loadAd 调用成功');
+                } catch (e2) {
+                  console.error('loadAd 失败:', e2);
+                }
+              }, 3000);
             }
           };
           
@@ -284,18 +282,19 @@ export default function HomePage() {
     }
   }, [activeTab]); // 只依赖activeTab，不等待数据加载
 
-  // 切换到女生 tab 时，如果有缓存的备用素材，直接渲染到女生广告位
+  // 切换 tab 时，如果有缓存的广告素材，直接渲染到对应 tab 的广告位
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    if (activeTab !== 'female') return;
+    // 只有在首次 onComplete 成功之后，才允许使用缓存的广告
+    if (!hasInitialHomeAdLoadedRef.current) return;
 
-    const creative = cachedFemaleAdRef.current;
+    const creative = cachedAdRef.current;
     if (!creative) {
-      console.log('切换到女生 tab，但没有缓存的备用广告素材');
+      console.log(`切换到 ${activeTab} tab，但没有缓存的广告素材`);
       return;
     }
 
-    const containerId = 'adContainer_female';
+    const containerId = `adContainer_${activeTab}`;
     let retryCount = 0;
     const maxRetries = 20;
 
@@ -304,19 +303,23 @@ export default function HomePage() {
       const container = document.getElementById(containerId);
       if (!container) {
         if (retryCount >= maxRetries) {
-          console.log('切换到女生 tab 等待广告容器超时，放弃渲染，容器:', containerId);
+          console.log(`切换到 ${activeTab} tab 等待广告容器超时，放弃渲染，容器:`, containerId);
           return;
         }
         setTimeout(waitForContainer, 100);
         return;
       }
 
-      console.log('切换到女生 tab 找到广告容器:', containerId);
+      console.log(`切换到 ${activeTab} tab 找到广告容器:`, containerId);
       try {
+        if (!(window as any).TencentGDT || !(window as any).TencentGDT.NATIVE) {
+          console.log('SDK 未就绪，无法渲染缓存广告');
+          return;
+        }
         (window as any).TencentGDT.NATIVE.renderAd(creative, containerId);
-        console.log('✅ 切换到女生 tab 使用缓存广告渲染完成');
+        console.log(`✅ 切换到 ${activeTab} tab 使用缓存广告渲染完成`);
       } catch (e) {
-        console.error('切换到女生 tab 渲染缓存广告失败:', e);
+        console.error(`切换到 ${activeTab} tab 渲染缓存广告失败:`, e);
       }
     };
 
