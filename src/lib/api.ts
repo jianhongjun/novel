@@ -84,7 +84,7 @@ export async function getRecommendNovels(): Promise<NovelItem[]> {
     const sign = generateSign(params);
     params.sign = sign;
     
-    console.log('请求推荐小说，参数:', { uid, timestamp, sign: sign.substring(0, 8) + '...' });
+    //console.log('请求推荐小说，参数:', { uid, timestamp, sign: sign.substring(0, 8) + '...' });
     
     // 发送请求
     const response = await fetch(`${API_BASE_URL}/browser_business/novel/recommend`, {
@@ -95,7 +95,7 @@ export async function getRecommendNovels(): Promise<NovelItem[]> {
       body: JSON.stringify(params),
     });
     
-    console.log('API 响应状态:', response.status, response.statusText);
+    //console.log('API 响应状态:', response.status, response.statusText);
     
     if (!response.ok) {
       const errorText = await response.text();
@@ -104,7 +104,7 @@ export async function getRecommendNovels(): Promise<NovelItem[]> {
     }
     
     const data = await response.json();
-    console.log('API 返回数据:', { code: data.code, hasResult: !!data.result, resultLength: data.result?.length });
+    //('API 返回数据:', { code: data.code, hasResult: !!data.result, resultLength: data.result?.length });
     
     if (data.code !== 200) {
       const errorMsg = data.message || '获取推荐小说失败';
@@ -125,10 +125,10 @@ export async function getRecommendNovels(): Promise<NovelItem[]> {
       bookshelf: item.bookshelf,
     }));
     
-    console.log('成功获取小说列表，数量:', novels.length);
+    //console.log('成功获取小说列表，数量:', novels.length);
     return novels;
   } catch (error) {
-    console.error('获取推荐小说失败:', error);
+   // console.error('获取推荐小说失败:', error);
     // 提供更详细的错误信息
     if (error instanceof TypeError && error.message.includes('fetch')) {
       throw new Error('网络请求失败，请检查网络连接');

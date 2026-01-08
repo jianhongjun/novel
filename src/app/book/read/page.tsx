@@ -1076,11 +1076,11 @@ function ReadContent() {
           const adContainerId = `adContainer_chapter_${chapterItem.ccid}_${chapterIndex}`;
           return (
             <div key={chapterItem.ccid}>
-              {/* 从第二个章节开始，在标题上方显示广告 */}
+              <h1 className={styles.chapterTitle}>{chapterItem.title}</h1>
+               {/* 从第二个章节开始，在标题下方显示广告 */}
               {chapterIndex > 0 && (
                 <div id={adContainerId} style={{ margin: '20px 0', minHeight: '10px' }}></div>
               )}
-              <h1 className={styles.chapterTitle}>{chapterItem.title}</h1>
               <div className={styles.textContent}>
                   <div className={styles.chapterSection}>
                     {chapterItem.content.split('\r\n').map((paragraph, index) => (

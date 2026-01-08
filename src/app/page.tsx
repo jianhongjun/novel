@@ -41,26 +41,26 @@ export default function HomePage() {
       try {
         setLoading(true);
         setError(null);
-        console.log('开始获取推荐小说...');
+        //('开始获取推荐小说...');
         const data = await getRecommendNovels();
-        console.log('获取到的小说数据:', data.length, '条');
+        //console.log('获取到的小说数据:', data.length, '条');
         // 根据 freeType 区分男频和女频
         // freeType === 1: 男频
         // freeType === 2: 女频
         const maleBooks = data.filter(book => book.freeType === 1);
         const femaleBooks = data.filter(book => book.freeType === 2);
-        console.log('男频小说:', maleBooks.length, '条');
-        console.log('女频小说:', femaleBooks.length, '条');
+        //console.log('男频小说:', maleBooks.length, '条');
+        //console.log('女频小说:', femaleBooks.length, '条');
         setBooks(maleBooks);
         setBooks2(femaleBooks);
       } catch (err) {
-        console.error('获取小说列表失败:', err);
+        //console.error('获取小说列表失败:', err);
         const errorMessage = err instanceof Error ? err.message : '获取小说列表失败';
-        console.error('错误详情:', {
-          message: errorMessage,
-          error: err,
-          userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown'
-        });
+        // console.error('错误详情:', {
+        //   message: errorMessage,
+        //   error: err,
+        //   userAgent: typeof window !== 'undefined' ? window.navigator.userAgent : 'unknown'
+        // });
         setError(errorMessage);
       } finally {
         setLoading(false);
@@ -99,13 +99,13 @@ export default function HomePage() {
     }
     
     // 检查 SDK 状态
-    console.log('首页广告初始化 - SDK状态检查:', {
-      isArray: Array.isArray(gdt),
-      hasNATIVE: !!(gdt?.NATIVE),
-      queueLength: gdt?.length || 0,
-      gdtType: typeof gdt,
-      gdtConstructor: gdt?.constructor?.name
-    });
+    // console.log('首页广告初始化 - SDK状态检查:', {
+    //   isArray: Array.isArray(gdt),
+    //   hasNATIVE: !!(gdt?.NATIVE),
+    //   queueLength: gdt?.length || 0,
+    //   gdtType: typeof gdt,
+    //   gdtConstructor: gdt?.constructor?.name
+    // });
     
     // 检查 SDK 是否已经处理完队列（NATIVE 是否已加载）
     const nativeModule = gdt?.NATIVE;
@@ -117,7 +117,7 @@ export default function HomePage() {
     
     // 3.1.2 广告位申明：先push进入队列（必须在SDK加载之前）
     if (Array.isArray(gdt)) {
-      console.log('✅ 首页广告push进入队列，容器:', containerId);
+      //console.log('✅ 首页广告push进入队列，容器:', containerId);
       
      
       
@@ -131,8 +131,8 @@ export default function HomePage() {
         onComplete: function(res: any) {
           // 标记已经有过一次成功的广告回调
           hasInitialHomeAdLoadedRef.current = true;
-          console.log('=== 广告回调 onComplete ===');
-          console.log('广告回调:', res);
+          //console.log('=== 广告回调 onComplete ===');
+          //console.log('广告回调:', res);
           
           // 动态获取当前activeTab对应的容器ID（解决切换tab时容器ID不匹配的问题）
           // 通过检查DOM中哪个容器存在来确定当前应该使用哪个容器
@@ -164,77 +164,77 @@ export default function HomePage() {
             if (!container) {
               // 如果不在首页，直接放弃（避免在read页面等待首页容器）
               if (!isOnHomePage && (currentContainerId === 'adContainer_male' || currentContainerId === 'adContainer_female')) {
-                console.log('不在首页，放弃首页广告渲染，容器:', currentContainerId);
+                //console.log('不在首页，放弃首页广告渲染，容器:', currentContainerId);
                 return;
               }
               
               if (retryCount >= maxRetries) {
-                console.log('等待广告容器超时，放弃渲染，容器:', currentContainerId);
+                //console.log('等待广告容器超时，放弃渲染，容器:', currentContainerId);
                 return;
               }
-              console.log('等待广告容器:', currentContainerId, `(${retryCount}/${maxRetries})`);
+              //console.log('等待广告容器:', currentContainerId, `(${retryCount}/${maxRetries})`);
               setTimeout(waitForContainer, 100);
               return;
             }
             
-            console.log('找到广告容器:', currentContainerId);
+            //console.log('找到广告容器:', currentContainerId);
             
             if (res && res.constructor === Array && res.length > 0) {
-              console.log('广告数据:', res);
+              //console.log('广告数据:', res);
               try {
                 const creative = res[0];
                 (window as any).TencentGDT.NATIVE.renderAd(creative, currentContainerId);
-                console.log('✅ 渲染完成，容器:', currentContainerId);
+                //console.log('✅ 渲染完成，容器:', currentContainerId);
                 // 缓存广告素材，用于切换 tab 时使用
                 cachedAdRef.current = creative;
-                console.log('✅ 已缓存广告素材，用于切换 tab');
+                //console.log('✅ 已缓存广告素材，用于切换 tab');
               } catch (e) {
-                console.error('渲染失败:', e);
+                //console.error('渲染失败:', e);
               }
             } else if (res && res.data && Array.isArray(res.data) && res.data.length > 0) {
-              console.log('广告数据 (data):', res.data);
+              //console.log('广告数据 (data):', res.data);
               try {
                 const creative = res.data[0];
                 (window as any).TencentGDT.NATIVE.renderAd(creative, currentContainerId);
-                console.log('✅ 渲染完成 (data)，容器:', currentContainerId);
+                //console.log('✅ 渲染完成 (data)，容器:', currentContainerId);
                 // 缓存广告素材，用于切换 tab 时使用
                 cachedAdRef.current = creative;
-                console.log('✅ 已缓存广告素材，用于切换 tab');
+                //console.log('✅ 已缓存广告素材，用于切换 tab');
               } catch (e) {
-                console.error('渲染失败 (data):', e);
+                //console.error('渲染失败 (data):', e);
               }
             } else {
-              console.log('无广告或请求失败', res);
+              //console.log('无广告或请求失败', res);
               const placement_id = '8215620098413686';
               setTimeout(function() {
                 try {
                   // 检查是否还在首页（通过检查容器是否存在）
                   const isOnHomePage = document.getElementById('adContainer_male') || document.getElementById('adContainer_female');
                   if (!isOnHomePage) {
-                    console.log('不在首页，放弃 loadAd 调用');
+                    //console.log('不在首页，放弃 loadAd 调用');
                     return;
                   }
                   
                   // 检查 window.TencentGDT 是否存在（可能已被清理）
                   if (!(window as any).TencentGDT) {
-                    console.log('window.TencentGDT 不存在（可能已被清理），放弃 loadAd 调用');
+                    //console.log('window.TencentGDT 不存在（可能已被清理），放弃 loadAd 调用');
                     return;
                   }
                   
                   // 检查 NATIVE 是否存在
                   if (!(window as any).TencentGDT.NATIVE) {
-                    console.log('window.TencentGDT.NATIVE 不存在，放弃 loadAd 调用');
+                    //console.log('window.TencentGDT.NATIVE 不存在，放弃 loadAd 调用');
                     return;
                   }
                   
                   // 检查 loadAd 方法是否存在
                   if (typeof (window as any).TencentGDT.NATIVE.loadAd !== 'function') {
-                    console.log('loadAd 方法不存在，放弃调用');
+                    //console.log('loadAd 方法不存在，放弃调用');
                     return;
                   }
                   
                   (window as any).TencentGDT.NATIVE.loadAd(placement_id);
-                  console.log('✅ loadAd 调用成功');
+                  //console.log('✅ loadAd 调用成功');
                 } catch (e2) {
                   console.error('loadAd 失败:', e2);
                 }
@@ -249,12 +249,12 @@ export default function HomePage() {
         }
       });
       
-      console.log('✅ 首页广告push已进入队列，容器:', containerId, '队列长度:', gdt.length);
+      //console.log('✅ 首页广告push已进入队列，容器:', containerId, '队列长度:', gdt.length);
       
       // 3.1.3 加载H5 SDK（在push之后加载，确保push已进入队列）
       // 首页独立管理，只检查首页自己的标记
       if (!sdkLoaded) {
-        console.log('开始加载首页腾讯广告 SDK...');
+        //console.log('开始加载首页腾讯广告 SDK...');
         (function() {
           var doc = document,
           h = doc.getElementsByTagName('head')[0],
@@ -262,23 +262,23 @@ export default function HomePage() {
           s.async = false; // 同步加载，确保SDK在页面渲染前完全加载
           s.src = 'https://qzs.gdtimg.com/union/res/union_sdk/page/h5_sdk/i.js';
           s.onerror = function() {
-            console.error('❌ 首页腾讯广告 SDK 加载失败');
+            //console.error('❌ 首页腾讯广告 SDK 加载失败');
           };
           s.onload = function() {
-            console.log('✅ 首页腾讯广告 SDK 脚本加载完成');
+            //console.log('✅ 首页腾讯广告 SDK 脚本加载完成');
             // 标记首页SDK已加载（首页独立标记）
             (window as any)[sdkInitKey] = true;
           };
           h && h.insertBefore(s, h.firstChild);
         })();
       } else {
-        console.log('首页腾讯广告 SDK 已加载，跳过');
+        //console.log('首页腾讯广告 SDK 已加载，跳过');
       }
       
       // 如果 SDK 已经处理完队列，尝试手动触发处理
       if (isSDKReady) {
-        console.log('⚠️ SDK已处理完队列（NATIVE已加载），但push已进入队列');
-        console.log('⚠️ 等待SDK处理新的push调用...');
+        //console.log('⚠️ SDK已处理完队列（NATIVE已加载），但push已进入队列');
+        //console.log('⚠️ 等待SDK处理新的push调用...');
       }
     }
   }, [activeTab]); // 只依赖activeTab，不等待数据加载
@@ -291,7 +291,7 @@ export default function HomePage() {
 
     const creative = cachedAdRef.current;
     if (!creative) {
-      console.log(`切换到 ${activeTab} tab，但没有缓存的广告素材`);
+      //console.log(`切换到 ${activeTab} tab，但没有缓存的广告素材`);
       return;
     }
 
@@ -304,23 +304,23 @@ export default function HomePage() {
       const container = document.getElementById(containerId);
       if (!container) {
         if (retryCount >= maxRetries) {
-          console.log(`切换到 ${activeTab} tab 等待广告容器超时，放弃渲染，容器:`, containerId);
+          //console.log(`切换到 ${activeTab} tab 等待广告容器超时，放弃渲染，容器:`, containerId);
           return;
         }
         setTimeout(waitForContainer, 100);
         return;
       }
 
-      console.log(`切换到 ${activeTab} tab 找到广告容器:`, containerId);
+      //console.log(`切换到 ${activeTab} tab 找到广告容器:`, containerId);
       try {
         if (!(window as any).TencentGDT || !(window as any).TencentGDT.NATIVE) {
-          console.log('SDK 未就绪，无法渲染缓存广告');
+          //console.log('SDK 未就绪，无法渲染缓存广告');
           return;
         }
         (window as any).TencentGDT.NATIVE.renderAd(creative, containerId);
-        console.log(`✅ 切换到 ${activeTab} tab 使用缓存广告渲染完成`);
+        //console.log(`✅ 切换到 ${activeTab} tab 使用缓存广告渲染完成`);
       } catch (e) {
-        console.error(`切换到 ${activeTab} tab 渲染缓存广告失败:`, e);
+        //console.error(`切换到 ${activeTab} tab 渲染缓存广告失败:`, e);
       }
     };
 
