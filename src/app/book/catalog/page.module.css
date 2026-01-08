@@ -48,6 +48,30 @@
   cursor: pointer;
   margin-top: 13px;
   margin-bottom: 20px;
+  text-decoration: none;
+  display: block;
+  -webkit-tap-highlight-color: transparent; /* 去掉移动端点击高亮 */
+  background-color: transparent; /* 确保背景透明 */
+}
+
+.chapterList0:visited {
+  color: #333333;
+  background-color: transparent;
+}
+
+.chapterList0:hover {
+  color: #333333;
+  background-color: transparent;
+}
+
+.chapterList0:active {
+  color: #333333;
+  background-color: transparent;
+}
+
+.chapterList0:focus {
+  background-color: transparent;
+  outline: none; /* 去掉焦点轮廓 */
 }
 
 .content {
@@ -78,6 +102,31 @@
 .chapterItem {
   padding: 16px 0;
   cursor: pointer;
+  text-decoration: none;
+  display: block;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent; /* 去掉移动端点击高亮 */
+  background-color: transparent; /* 确保背景透明 */
+}
+
+.chapterItem:visited {
+  color: inherit;
+  background-color: transparent;
+}
+
+.chapterItem:hover {
+  color: inherit;
+  background-color: transparent;
+}
+
+.chapterItem:active {
+  color: inherit;
+  background-color: transparent;
+}
+
+.chapterItem:focus {
+  background-color: transparent;
+  outline: none; /* 去掉焦点轮廓 */
 }
 
 .chapterInfo {
@@ -109,6 +158,7 @@
   font-style: normal;
   flex: 1;
   min-width: 0;
+  text-decoration: none;
 }
 
 .chapterTitleRead {

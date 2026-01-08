@@ -5,6 +5,7 @@ import Script from 'next/script';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getRecommendNovels, NovelItem } from '../lib/api';
+import { getStaticLink } from '../lib/staticLink';
 import common from './styles/common.module.css';
 import styles from './page.module.css';
 
@@ -347,7 +348,7 @@ export default function HomePage() {
           </div>
           <a 
             className={styles.categoryButton}
-            href="/category"
+            href={getStaticLink('/category')}
             style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
           >
             <Image
@@ -471,7 +472,7 @@ export default function HomePage() {
               <div key={book.id}>
                 <a 
                   className={styles.bookItem}
-                  href={`/book?id=${book.id}`}
+                  href={getStaticLink(`/book?id=${book.id}`)}
                   style={{ cursor: 'pointer', textDecoration: 'none' }}
                 >
                   <div className={styles.bookCoverWrapper}>

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { getBookInfo, BookInfo, getUserId } from '../../lib/api';
+import { getStaticLink } from '../../lib/staticLink';
 import common from '../styles/common.module.css';
 import styles from './page.module.css';
 
@@ -44,14 +45,14 @@ function BookDetailContent() {
         }
         // 如果有记录，跳转到记录的位置；否则跳转到第一页
         if (targetChapterId) {
-          window.location.href = `/book/read?id=${bookId}&chapter=${targetChapterId}`;
+          window.location.href = getStaticLink(`/book/read?id=${bookId}&chapter=${targetChapterId}`);
         } else {
-          window.location.href = `/book/read?id=${bookId}`;
+          window.location.href = getStaticLink(`/book/read?id=${bookId}`);
         }
       } catch (error) {
         console.error('检查阅读记录失败:', error);
         // 出错时跳转到第一页
-        window.location.href = `/book/read?id=${bookId}`;
+        window.location.href = getStaticLink(`/book/read?id=${bookId}`);
       }
     }, 500);
   };
@@ -155,7 +156,7 @@ function BookDetailContent() {
       <div className={styles.container}>
         <header className={`${styles.header} ${styles.stickyHeader}`}>
           
-          <a className={common.backButtonBase} href="/" style={{ textDecoration: 'none', display: 'inline-block' }}>
+          <a className={common.backButtonBase} href={getStaticLink('/')} style={{ textDecoration: 'none', display: 'inline-block' }}>
             <Image
               src="/fh@2x.png"
               alt="返回"
@@ -166,7 +167,7 @@ function BookDetailContent() {
               unoptimized
             />
           </a>
-          <a className={styles.catalogButton} href={`/book/catalog?id=${book.id}`} style={{ textDecoration: 'none' }}>
+          <a className={styles.catalogButton} href={getStaticLink(`/book/catalog?id=${book.id}`)} style={{ textDecoration: 'none' }}>
             目录
           </a>
         </header>

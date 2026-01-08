@@ -3,6 +3,7 @@
 import { useState, Suspense, useRef, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getChapterList, getChapterContent, getUserId, getBookInfo } from '../../../lib/api';
+import { getStaticLink } from '../../../lib/staticLink';
 import common from '../../styles/common.module.css';
 import styles from './page.module.css';
 
@@ -189,7 +190,7 @@ function ReadContent() {
                 if (latestBookmark && latestBookmark.chapterId) {
                   targetCcid = latestBookmark.chapterId;
                   // 使用 window.location.replace 实现完全隔离（整页重新加载）
-                  window.location.replace(`/book/read?id=${bookId}&chapter=${targetCcid}`);
+                  window.location.replace(getStaticLink(`/book/read?id=${bookId}&chapter=${targetCcid}`));
                   return; // 跳转后不再执行后续逻辑
                 }
               }
@@ -1046,7 +1047,7 @@ function ReadContent() {
   return (
     <main className={common.pageBase2}>
       <header className={styles.header}>
-        <a className={common.backButtonBase} href={`/book?id=${bookId}`} style={{ textDecoration: 'none', display: 'inline-block' }}>
+        <a className={common.backButtonBase} href={getStaticLink(`/book?id=${bookId}`)} style={{ textDecoration: 'none', display: 'inline-block' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/fh@2x.png"
@@ -1061,7 +1062,7 @@ function ReadContent() {
             {bookTitle}
           </div>
         )}
-        <a className={styles.catalogButton} href={`/book/catalog?id=${bookId}`} style={{ textDecoration: 'none' }}>
+        <a className={styles.catalogButton} href={getStaticLink(`/book/catalog?id=${bookId}`)} style={{ textDecoration: 'none' }}>
           目录
         </a>
       </header>

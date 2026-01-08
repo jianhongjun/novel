@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { getChapterList, getUserId, ChapterListItem } from '../../../lib/api';
+import { getStaticLink } from '../../../lib/staticLink';
 import common from '../../styles/common.module.css';
 import styles from './page.module.css';
 
@@ -356,7 +357,7 @@ function CatalogContent() {
   return (
     <main className={common.pageBase2}>
       <header className={styles.header}>
-        <a className={common.backButtonBase} href={`/book?id=${bookId}`} style={{ textDecoration: 'none', display: 'inline-block' }}>
+        <a className={common.backButtonBase} href={getStaticLink(`/book?id=${bookId}`)} style={{ textDecoration: 'none', display: 'inline-block' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/fh@2x.png"
@@ -385,7 +386,7 @@ function CatalogContent() {
       <div className={styles.content} ref={contentRef}>
         <a 
           className={styles.chapterList0}
-          href={`/book?id=${bookId}`}
+          href={getStaticLink(`/book?id=${bookId}`)}
           style={{ textDecoration: 'none', display: 'block' }}
         >
           书封页
@@ -420,7 +421,7 @@ function CatalogContent() {
               
               <a 
                 className={styles.chapterItem}
-                href={`/book/read?id=${bookId}&chapter=${chapter.ccid}`}
+                href={getStaticLink(`/book/read?id=${bookId}&chapter=${chapter.ccid}`)}
               >
                 {chapter.progress > 0 ? (
                   <div className={styles.chapterInfoRead}>

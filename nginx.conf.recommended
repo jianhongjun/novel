@@ -1,0 +1,27 @@
+# 推荐版 Nginx 配置
+# Nginx 的 try_files 会自动忽略查询参数，所以这个配置可以处理所有路径
+
+server {
+    listen 9017;
+    server_name localhost;
+    root /path/to/out;  # 替换为你的 out 目录的绝对路径
+    index index.html;
+
+    # 通用规则：处理所有路径（包括带查询参数的）
+    # try_files 会自动忽略查询参数，所以 /book?id=123 会尝试 /book.html
+    location / {
+        try_files $uri $uri.html $uri/ /index.html;
+    }
+
+    # 静态资源缓存（可选，提升性能）
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # 禁止访问隐藏文件（安全）
+    location ~ /\. {
+        deny all;
+    }
+}
+

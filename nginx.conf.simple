@@ -1,0 +1,37 @@
+# 简化版 Nginx 配置（推荐）
+# 这个配置可以处理所有带查询参数的路径，无需为每个路径单独配置
+
+server {
+    listen 9017;
+    server_name localhost;
+    root /path/to/out;  # 替换为你的 out 目录的绝对路径
+    index index.html;
+
+    # 通用规则：处理所有路径（包括带查询参数的）
+    # 1. 先尝试精确匹配文件（如 /book）
+    # 2. 再尝试添加 .html 后缀（如 /book.html）
+    # 3. 如果是目录，尝试目录下的 index.html
+    # 4. 最后回退到根目录的 index.html
+    location / {
+        # 移除查询参数，只保留路径部分
+        set $path $uri;
+        if ($args) {
+            set $path "${uri}?${args}";
+        }
+        
+        # 尝试文件路径
+        try_files $uri $uri.html $uri/ /index.html;
+    }
+
+    # 静态资源缓存
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # 禁止访问隐藏文件
+    location ~ /\. {
+        deny all;
+    }
+}
+
