@@ -13,7 +13,7 @@
 
 /* 固定容器：包含 header 和 tabs */
 .fixedHeader {
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;
@@ -24,7 +24,7 @@
 }
 
 .mainContent {
-  margin-top: 130px; /* header (60px) + tabs (70px) */
+   /*margin-top: 130px; header (60px) + tabs (70px) */
   padding: 0 16px 24px 16px;
   box-sizing: border-box;
   height: calc(100% - 130px); /* 剩余空间内滚动 */
@@ -168,6 +168,19 @@
   height: auto;
   display: block;
   z-index: 1;
+  /* 大屏幕默认样式 */
+  border-radius: 0;
+  max-height: 150px;
+  object-fit: cover;
+}
+
+/* 小屏幕样式 */
+@media (max-width: 768px) {
+  .bannerImage {
+    border-radius: 12px;
+    height: auto;
+    max-height: none;
+  }
 }
 
 .bannerContent {

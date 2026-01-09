@@ -383,7 +383,7 @@ export default function HomePage() {
           
           <Image
             key={activeTab}
-            src={activeTab === 'male' ? '/bg_nan@2x.png' : '/bg_nv@2x.png'}
+            src={activeTab === 'male' ? '/bg_nan2@2x.png' : '/bg_nv2@2x.png'}
             alt="Banner"
             width={100}
             height={100}
