@@ -1,19 +1,34 @@
 'use client';
 
 import { useState, useEffect, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 import { getCategoryListBooks, CategoryListBook } from '../../lib/api';
+import { getStaticLink } from '../../lib/staticLink';
 import common from '../styles/common.module.css';
 import styles from './page.module.css';
 
 function CategoryListContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const categoryName = searchParams.get('category') || '玄幻';
   const freeTypeParam = searchParams.get('freeType');
   const freeType = freeTypeParam ? parseInt(freeTypeParam) : 1; // 默认1（男频）
   
+  // 页面加载时，检查并保存 target 参数到 localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('target');
+        if (target) {
+          localStorage.setItem('__target_param', target);
+        }
+      } catch (e) {
+        // 忽略错误
+      }
+    }
+  }, []);
+
   // 调试信息
   useEffect(() => {
     //console.log('接收到的参数 - category:', categoryName, 'freeType:', freeType, 'freeTypeParam:', freeTypeParam);
@@ -60,7 +75,7 @@ function CategoryListContent() {
 
       <div className={styles.container}>
         <header className={`${common.headerWithBackBase} ${styles.stickyHeader}`}>
-          <button className={common.backButtonBase} onClick={() => router.back()}>
+          <a className={common.backButtonBase} href={getStaticLink('/category')} style={{ textDecoration: 'none', display: 'inline-block' }}>
             <Image
               src="/fh@2x.png"
               alt="返回"
@@ -70,7 +85,7 @@ function CategoryListContent() {
               priority
               unoptimized
             />
-          </button>
+          </a>
         </header>
         
         <div className={styles.scrollArea}>
@@ -123,11 +138,11 @@ function CategoryListContent() {
               </div>
             ) : (
               books.map((book) => (
-                <div 
+                <a 
                   key={book.id} 
                   className={styles.bookItem}
-                  onClick={() => router.push(`/book?id=${book.id}`)}
-                  style={{ cursor: 'pointer' }}
+                  href={getStaticLink(`/book?id=${book.id}`)}
+                  style={{ cursor: 'pointer', textDecoration: 'none', display: 'block' }}
                 >
                   <div className={styles.bookCoverWrapper}>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -172,7 +187,7 @@ function CategoryListContent() {
                     </div>
                     <p className={styles.bookDesc}>{book.intro}</p>
                   </div>
-                </div>
+                </a>
               ))
             )}
           </section>

@@ -108,6 +108,21 @@ function ReadContent() {
     }
   }, [bookId]);
 
+  // 页面加载时，检查并保存 target 参数到 localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('target');
+        if (target) {
+          localStorage.setItem('__target_param', target);
+        }
+      } catch (e) {
+        // 忽略错误
+      }
+    }
+  }, []);
+
   // 获取书籍信息（用于设置页面标题）
   useEffect(() => {
     const fetchBookTitle = async () => {

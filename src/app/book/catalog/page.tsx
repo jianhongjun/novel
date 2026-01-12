@@ -39,6 +39,21 @@ function CatalogContent() {
   const autoLoadCountRef = useRef(0); // 记录连续自动加载的次数
   const lastCheckTimeRef = useRef(0); // 记录上次检查的时间，防止频繁检查
 
+  // 页面加载时，检查并保存 target 参数到 localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('target');
+        if (target) {
+          localStorage.setItem('__target_param', target);
+        }
+      } catch (e) {
+        // 忽略错误
+      }
+    }
+  }, []);
+
   // 从 localStorage 获取阅读进度
   const getChapterProgress = (ccid: string): number => {
     try {

@@ -1,14 +1,15 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getCategoryList, CategoryGroup } from '../../lib/api';
+import { getStaticLink } from '../../lib/staticLink';
+import { useTarget } from '../../lib/useTarget';
+import { useTargetParam } from '../../lib/useTargetParam';
 import common from '../styles/common.module.css';
 import styles from './page.module.css';
 
 export default function CategoryPage() {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<'male' | 'female' | 'publish'>('male');
   const [categories, setCategories] = useState<CategoryGroup[]>([]);
   const [loading, setLoading] = useState(true);
@@ -22,7 +23,28 @@ export default function CategoryPage() {
     { key: 'female', label: '女频' }
   ];
 
+  // 获取 target 参数（客户端）
+  const target = useTarget();
   
+  // 使用 hook 动态更新所有链接的 target 参数（作为备用方案）
+  useTargetParam();
+
+  // 如果 URL 中没有 target 但 localStorage 中有，更新 URL
+  useEffect(() => {
+    if (typeof window === 'undefined' || !target) return;
+    
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (!urlParams.has('target')) {
+        // URL 中没有 target，但 localStorage 中有，更新 URL
+        const newUrl = new URL(window.location.href);
+        newUrl.searchParams.set('target', target);
+        window.history.replaceState({}, '', newUrl.toString());
+      }
+    } catch (e) {
+      // 忽略错误
+    }
+  }, [target]);
 
   // 调用分类接口
   useEffect(() => {
@@ -85,7 +107,7 @@ export default function CategoryPage() {
       <div className={common.bannerBlur2Base}></div>
       <div className={styles.container}>
         <header className={`${common.headerWithBackBase} ${styles.stickyHeader}`}>
-          <button className={common.backButtonBase} onClick={() => router.back()}>
+          <a className={common.backButtonBase} href={target ? getStaticLink(`/?target=${encodeURIComponent(target)}`) : getStaticLink('/')} style={{ textDecoration: 'none', display: 'inline-block' }}>
             <Image
               src="/fh@2x.png"
               alt="返回"
@@ -95,7 +117,7 @@ export default function CategoryPage() {
               priority
               unoptimized
             />
-          </button>
+          </a>
           <h1 className={styles.title}>分类</h1>
         </header>
 
@@ -140,13 +162,10 @@ export default function CategoryPage() {
                   // 根据 sectionKey 确定 freeType: male=1, female=2, publish=3
                   const freeType = sectionKey === 'male' ? 1 : sectionKey === 'female' ? 2 : 3;
                   return (
-                  <div 
+                  <a 
                     key={`${sectionKey}-${category.id}`} 
                     className={styles.categoryItem}
-                    onClick={() => {
-                      const url = `/category-list?category=${encodeURIComponent(category.name)}&freeType=${freeType}`;
-                      router.push(url);
-                    }}
+                    href={target ? getStaticLink(`/category-list?category=${encodeURIComponent(category.name)}&freeType=${freeType}&target=${encodeURIComponent(target)}`) : getStaticLink(`/category-list?category=${encodeURIComponent(category.name)}&freeType=${freeType}`)}
                     style={{ cursor: 'pointer' }}
                   >
                       <span className={styles.categoryName}>{category.name}</span>
@@ -162,7 +181,7 @@ export default function CategoryPage() {
                           (e.target as HTMLImageElement).src = '/fl_1.png';
                         }}
                     />
-                  </div>
+                  </a>
                   );
                 })}
                 </div>

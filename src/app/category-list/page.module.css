@@ -111,6 +111,20 @@
   min-width: 0;
   overflow: hidden;
   width: 100%;
+  text-decoration: none;
+  color: inherit;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
+
+.bookItem:visited,
+.bookItem:hover,
+.bookItem:active,
+.bookItem:focus {
+  text-decoration: none;
+  color: inherit;
+  background-color: transparent;
+  outline: none;
 }
 
 .bookCoverWrapper {

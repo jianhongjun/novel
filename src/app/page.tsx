@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { getRecommendNovels, NovelItem } from '../lib/api';
 import { getStaticLink } from '../lib/staticLink';
+import { useTarget } from '../lib/useTarget';
 import common from './styles/common.module.css';
 import styles from './page.module.css';
 
@@ -25,6 +26,8 @@ export default function HomePage() {
   const [books2, setBooks2] = useState<NovelItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // 获取 target 参数（客户端）
+  const target = useTarget();
   // 标记是否已经成功通过 push + onComplete 拉取过一次首页广告
   const hasInitialHomeAdLoadedRef = useRef(false);
   // 缓存广告素材，用于切换 tab 时直接渲染（不再调用 loadAd）
@@ -72,6 +75,21 @@ export default function HomePage() {
 
 
   
+
+  // 页面加载时，检查并保存 target 参数到 localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('target');
+        if (target) {
+          localStorage.setItem('__target_param', target);
+        }
+      } catch (e) {
+        // 忽略错误
+      }
+    }
+  }, []);
 
   // 首页SDK初始化
   useEffect(() => {
@@ -348,7 +366,7 @@ export default function HomePage() {
           </div>
           <a 
             className={styles.categoryButton}
-            href={getStaticLink('/category')}
+            href={target ? getStaticLink(`/category?target=${encodeURIComponent(target)}`) : getStaticLink('/category')}
             style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px' }}
           >
             <Image
@@ -472,7 +490,7 @@ export default function HomePage() {
               <div key={book.id}>
                 <a 
                   className={styles.bookItem}
-                  href={getStaticLink(`/book?id=${book.id}`)}
+                  href={target ? getStaticLink(`/book?id=${book.id}&target=${encodeURIComponent(target)}`) : getStaticLink(`/book?id=${book.id}`)}
                   style={{ cursor: 'pointer', textDecoration: 'none' }}
                 >
                   <div className={styles.bookCoverWrapper}>

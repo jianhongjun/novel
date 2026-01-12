@@ -18,6 +18,21 @@ function BookDetailContent() {
   const [isSlidingUp, setIsSlidingUp] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
 
+  // 页面加载时，检查并保存 target 参数到 localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const target = urlParams.get('target');
+        if (target) {
+          localStorage.setItem('__target_param', target);
+        }
+      } catch (e) {
+        // 忽略错误
+      }
+    }
+  }, []);
+
   // 处理上滑开始阅读的逻辑
   const handleStartReading = () => {
     if (isSlidingUp) return; // 防止重复触发
